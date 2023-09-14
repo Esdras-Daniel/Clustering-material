@@ -1,2 +1,2 @@
-# CLustering-material
+# Clustering-material
  Materiais sobre clusterização
