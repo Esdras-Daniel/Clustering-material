@@ -1,0 +1,1 @@
+As embeddings tiveram que ser compactadas para serem compartilhadas. Extraia cada uma em seu computador.
