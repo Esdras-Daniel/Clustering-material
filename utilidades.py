@@ -5,7 +5,7 @@ import seaborn as sns
 from sklearn.metrics.cluster import contingency_matrix, silhouette_score, normalized_mutual_info_score
 from scipy.optimize import linear_sum_assignment as linear_assignment
 
-from sklearn.metrics import accuracy_score, rand_score
+from sklearn.metrics import accuracy_score, rand_score, adjusted_rand_score
 
 # Dados
 from sklearn.datasets import load_iris, load_wine
@@ -61,20 +61,24 @@ def plot_cluster_evaluation(X, labels_true, labels_pred, target_names):
 
     row_ind, col_ind = linear_assignment(matriz_contingencia, maximize = True)
 
-    sum = 0
-    # Percorrendo cada linha e somando o maior valor das colunas (A posição do maior valor está na variável col_ind)
-    for i in row_ind:
-        sum += matriz_contingencia[i][col_ind[i]]
+    #print(f'row_ind {row_ind}')
+    #print(f'col_ind {col_ind}')
 
-    accuracy = sum / len(labels_true)
+    sum = 0
+    # Somando o maior valor das colunas (A posição do maior valor está na variável col_ind)
+    for i, j in zip(row_ind, col_ind):
+        sum += matriz_contingencia[i][j]
+
+    accuracy = (sum / len(labels_true))*100
 
      # Calcular e exibir as métricas de avaliação de clusters
     plt.subplot(1, 3, 3)
     silhouette = silhouette_score(X, labels_pred)
     nmi = normalized_mutual_info_score(labels_true, labels_pred)
-    #adj_rand_score = adjusted_rand_score(labels_true, labels_pred)
+    rand_index = rand_score(labels_true, labels_pred)
+    adj_rand_score = adjusted_rand_score(labels_true, labels_pred)
 
-    plt.text(0.5, 0.5, f"Silhouette Score: {silhouette:.2f}\n Normalized Mutual Information: {nmi:.2f}\n Accuracy Score: {accuracy:.2f}\n Rand Index: {rand_score(labels_true, labels_pred):.2f}",
+    plt.text(0.5, 0.5, f"Silhouette Score: {silhouette:.2f}\n Normalized Mutual Information: {nmi:.2f}\n Accuracy Score: {accuracy:.2f}%\n Rand Index: {rand_index:.2f}\n Adjusted Rand Score: {adj_rand_score:.2f}",
              fontsize=12, ha='center')
     plt.axis('off')
     plt.title("Métricas de Avaliação de Clusters")
